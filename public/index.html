@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEPO — canlı techno club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Inter:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{ "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }</script>
+</head>
+<body>
+<div id="app">
+  <div id="frame">
+    <canvas id="gl"></canvas>
+    <canvas id="lbl"></canvas>
+    <div id="flash"></div>
+    <div id="hud">
+      <!-- TikTok'un telefon arayüzü üst ~%18'i (profil, takip, izleyiciler) ve alt ~%35'i (yorumlar, hediye düğmeleri) kaplar.
+           Oyunun bilgileri bu iki alanın arasındaki "güvenli" bölgeye yerleştirildi. -->
+      <div id="topBlock">
+        <header id="np">
+          <div class="np-l">
+            <div class="np-k"><span id="liveDot"></span>ŞU AN ÇALIYOR<span id="viewers"></span></div>
+            <div class="np-t"><b id="npArtist">SHURE</b> — <span id="npTitle">…</span> · <span id="npMode">POP</span></div>
+          </div>
+          <div class="np-r">
+            <div class="bpm"><b id="bpm">124</b><small>bpm</small></div>
+            <div class="beats" id="beats"><i></i><i></i><i></i><i></i></div>
+          </div>
+        </header>
+        <div id="progress"><span id="state">▶ GROOVE</span><div class="line"><i id="buildFill"></i></div><span id="buildPct">0%</span>
+          <span class="chans" id="chans"><span data-ch="kick">K</span><span data-ch="hat">H</span><span data-ch="bas">B</span><span data-ch="acid">M</span></span>
+          <span id="buildLab" hidden></span>
+        </div>
+      </div>
+      <div id="king"></div>
+      <div id="guide"></div>
+      <div id="vote" hidden></div>
+      <div id="feed"></div>
+      <div id="caption"></div>
+      <div id="cta">💬 Yorum yaz, <b>kulübe gir!</b></div>
+      <div id="dropText">DROP!</div>
+      <div id="safeZones" hidden><div class="sz top">TikTok üst çubuğu</div><div class="sz bottom">TikTok yorumları ve düğmeleri</div></div>
+      <div id="soundGate">🔊 Sesi açmak için tıkla</div>
+      <div id="muteMark" hidden title="Ses kapalı: pencereye tıkla">🔇</div>
+    </div>
+  </div>
+  <aside id="panel">
+    <h2>🎧 DEPO kontrol paneli</h2>
+    <p class="muted">Bu paneli yayına verme. Yayın için <a href="/?clean" target="_blank">/?clean</a> penceresini pencere yakalama ile seç.</p>
+    <section>
+      <h3>TikTok bağlantısı</h3>
+      <div class="row"><input id="user" placeholder="kullanıcı adı (@ olmadan)"><button id="connect">Bağlan</button><button id="disc" class="ghost">Kes</button></div>
+      <div id="status" class="status idle">Bağlı değil</div>
+    </section>
+    <section>
+      <h3>Yayına hazır mı?</h3>
+      <ul class="check" id="checklist"></ul>
+    </section>
+    <section>
+      <h3>Yayın kontrolü</h3>
+      <div class="muted">Sadece başlatır; sahte oy ya da sahte izleyici eklemez.</div>
+      <div class="grid" id="liveBtns">
+        <button data-live="drop">💥 Drop'u zorla</button>
+        <button data-live="skip">⏭ Sonraki parça</button>
+        <button data-live="kanal">🎛️ Kanal oyu başlat</button>
+        <button data-live="parca">🗳 Parça oylaması başlat</button>
+        <button data-live="bpm">🎯 BPM tahmini başlat</button>
+      </div>
+      <div class="muted" id="liveMsg"></div>
+    </section>
+    <section>
+      <details id="testBox">
+        <summary>🧪 Test (yayın açmadan dene)</summary>
+        <div class="warn" id="testLock" hidden>Canlı yayına bağlısın: test olayları yayında görüneceği için kilitli.</div>
+        <div class="grid" id="demoBtns">
+          <button data-demo="member">🎟️ Biri yorumla girdi</button>
+          <button data-demo="chat">💬 Yorum</button>
+          <button data-demo="color">🎨 Renk yorumu</button>
+          <button data-demo="like">❤️ 25 beğeni</button>
+          <button data-demo="follow">➕ Takip</button>
+          <button data-demo="crowd">👥 +20 kişi</button>
+          <button data-demo="minitest">🗳 Mini oyunu sahte oylarla dene</button>
+        </div>
+        <div class="muted">Hediyeler:</div>
+        <div class="grid" id="giftBtns"></div>
+      </details>
+    </section>
+    <section>
+      <h3>Ayarlar</h3>
+      <label><input type="checkbox" id="optSound"> Ses</label>
+      <label><input type="checkbox" id="optStrobe" checked> Flaş efektleri (ışığa duyarlıysan kapat)</label>
+      <label><input type="checkbox" id="optBots" checked> Boşken demo dansçılar</label>
+      <label><input type="checkbox" id="optSafe"> Telefonda TikTok'un kapattığı alanları göster (sadece panelde)</label>
+      <label>Kalite <select id="optQuality"><option value="low">Düşük (zayıf bilgisayar)</option><option value="mid">Orta</option><option value="high">Yüksek (yayın için önerilir)</option></select></label>
+      <div class="muted" id="fps"></div>
+      <div class="warn" id="fpsWarn" hidden>⚠️ Sahne kasıyor. Kaliteyi düşürmeyi dene.</div>
+    </section>
+    <section>
+      <h3>Hediye kaydı</h3>
+      <div class="muted">hediyeler.json'a ad/id yazmak için buradan bak.</div>
+      <ul id="giftLog"></ul>
+    </section>
+  </aside>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

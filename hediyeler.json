@@ -1,0 +1,23 @@
+{
+  "_aciklama": [
+    "DEPO hediye kuralları. TikTok LIVE Studio 'İzleyici Dilekleri' listesindeki hediyelerle aynı tut. Kaydedip sayfayı yenilemen yeterli.",
+    "eylem (değiştirme): isikcubugu | podyum | lazer | co2 | vip | dj | festival | dans",
+    "dans eyleminde \"dans\" alanı hangi özel dans olduğunu söyler: disko | dalga | yeldegirmeni | kalabalik (etrafındaki 12 kişiye 20 sn yaptırır). Süre hediye başına 60 sn, seride katlanır (en fazla 5 dk).",
+    "etiket: ekranda görünen ad. jeton: hediyenin jeton değeri. minJeton: bu değer ve üstü (listede olmayan) her hediye.",
+    "ad / id: hediyenin TikTok'taki adı / ID'si (kontrol panelindeki 'Hediye kaydı'ndan bak). Boşsa sadece jeton değerine göre eşleşir.",
+    "Listede olmayan hediyeler değerine göre ışık şovu olur ve 'Gecenin Kralı' sıralamasına yazılır."
+  ],
+  "kurallar": [
+    { "eylem": "isikcubugu", "etiket": "Işık Çubuğu",      "jeton": 1,   "ikon": "🌹", "ad": ["Rose", "Gül"], "id": ["5655"] },
+    { "eylem": "podyum",     "etiket": "Podyuma Çık",      "jeton": 10,  "ikon": "🕺", "ad": [], "id": [] },
+    { "eylem": "lazer",      "etiket": "Lazer Şovu",       "jeton": 30,  "ikon": "🔦", "ad": [], "id": [] },
+    { "eylem": "co2",        "etiket": "CO2 Patlat + Drop", "jeton": 99,  "ikon": "💨", "ad": [], "id": [] },
+    { "eylem": "vip",        "etiket": "VIP Balkon",       "jeton": 199, "ikon": "💎", "ad": [], "id": [] },
+    { "eylem": "dj",         "etiket": "DJ Ol",            "jeton": 500, "ikon": "🎧", "ad": [], "id": [] },
+    { "eylem": "festival",   "etiket": "Festivali Başlat", "minJeton": 1000, "ikon": "🎆", "ad": [], "id": [] },
+    { "eylem": "dans", "dans": "disko",        "etiket": "Disko",             "jeton": 5,   "ikon": "🕺", "ad": [], "id": [] },
+    { "eylem": "dans", "dans": "dalga",      "etiket": "Vücut Dalgası",     "jeton": 15,  "ikon": "🌊", "ad": [], "id": [] },
+    { "eylem": "dans", "dans": "yeldegirmeni", "etiket": "Yel Değirmeni",     "jeton": 20,  "ikon": "🌪️", "ad": [], "id": [] },
+    { "eylem": "dans", "dans": "kalabalik",  "etiket": "Kalabalığa Yaptır", "jeton": 299, "ikon": "👑", "ad": [], "id": [] }
+  ]
+}

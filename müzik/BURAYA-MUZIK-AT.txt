@@ -1,0 +1,1 @@
+Kendi telifsiz techno parçalarını (mp3, wav, ogg...) bu klasöre at. Boşsa oyun kendi techno'sunu üretir.

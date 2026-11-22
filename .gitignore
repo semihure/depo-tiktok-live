@@ -1,0 +1,7 @@
+node_modules/
+# kişisel ayarlar (Euler anahtarı, kullanıcı adı) — örnek: ayarlar.ornek.json
+ayarlar.json
+# şarkılar: telifli olabilir, depoya girmez (klasörün açıklama dosyası kalır)
+müzik/*
+!müzik/BURAYA-MUZIK-AT.txt
+.DS_Store

@@ -1,0 +1,142 @@
+:root { --acc: #8cff3a; --bg: #07070a; --panel: #121216; --text: #ececf1; --muted: #8b8b96; --cyan: #8cff3a; --green: #8cff3a;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; }
+#app { display: flex; height: 100%; justify-content: center; gap: 16px; }
+#frame { position: relative; height: 100vh; aspect-ratio: 9 / 16; max-width: 100vw; overflow: hidden; container-type: size; background: #000; }
+body.clean #frame { height: 100vh; width: 100vw; aspect-ratio: auto; }
+body.clean #panel { display: none; }
+#gl, #lbl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#lbl { pointer-events: none; }
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+#hud { position: absolute; inset: 0; pointer-events: none; font-size: 1.8cqh; }
+#hud > * { position: absolute; z-index: 1; }
+/* TikTok üst çubuğu altında okunabilirlik için hafif koyu geçiş */
+/* karartma sadece üst bilgi bloğunun arkasında (üstteki LED/DEPO görünsün) */
+#hud::before { content: ""; position: absolute; left: 0; right: 0; top: 15.5%; height: 11.5%; pointer-events: none; background: linear-gradient(transparent, rgba(0,0,0,.62) 18%, rgba(0,0,0,.62) 78%, transparent); }
+
+/* ---------- üst blok: TikTok'un üst ~%18'inin altında ---------- */
+#topBlock { top: 17.5%; left: 5%; right: 5%; }
+#np { display: flex; justify-content: space-between; align-items: flex-start; font-family: var(--mono); }
+.np-k { font-size: .7em; font-weight: 800; letter-spacing: .2em; color: #fff; display: flex; align-items: center; gap: .55em; }
+#viewers { color: var(--muted); letter-spacing: .05em; font-weight: 500; }
+#liveDot { width: .55em; height: .55em; border-radius: 50%; background: #444; }
+#liveDot.on { background: #ff2d55; box-shadow: 0 0 .5em #ff2d55; animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+.np-t { margin-top: .25em; font-size: .78em; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; max-width: 62cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-t b { color: #d6d6de; font-weight: 700; }
+#npMode { color: var(--acc); }
+.np-r { text-align: right; }
+.bpm { display: flex; align-items: baseline; gap: .25em; justify-content: flex-end; }
+.bpm b { font-size: 1.7em; line-height: .9; font-weight: 800; letter-spacing: .04em; color: #fff; font-variant-numeric: tabular-nums; }
+.bpm small { font-size: .62em; color: var(--muted); letter-spacing: .1em; }
+.beats { display: flex; gap: .3em; justify-content: flex-end; margin-top: .25em; }
+.beats i { width: .55em; height: .55em; border: 1px solid #9a9aa4; display: block; }
+.beats i.on { background: #fff; border-color: #fff; }
+.beats i.on:first-child { background: var(--acc); border-color: var(--acc); }
+#statusRow { margin-top: .7em; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: .68em; letter-spacing: .12em; }
+#state { font-weight: 800; color: var(--acc); padding: .15em .45em; }
+#state.hot { background: var(--acc); color: #000; }
+.chans { display: flex; gap: .45em; color: #55555e; font-weight: 800; }
+.chans span { transition: color .12s; }
+.chans span.on { color: var(--acc); transition: none; }
+.chans span.solo { color: #000; background: var(--acc); padding: 0 .25em; }
+.chans span.off { color: #44444c; text-decoration: line-through; }
+#progress { margin-top: .45em; display: flex; align-items: center; gap: .6em; font-family: var(--mono); font-size: .62em; letter-spacing: .12em; color: #cfcfd6; font-weight: 700; }
+#progress .line { flex: 1; height: 5px; background: #2c2c33; position: relative; border-radius: 3px; overflow: hidden; }
+#progress i { position: absolute; left: 0; top: 0; height: 100%; width: 0; background: var(--acc); box-shadow: 0 0 .8em var(--acc); transition: width .2s; }
+#progress.hot #buildLab { color: var(--acc); animation: blink .5s infinite; }
+#buildPct { color: #fff; min-width: 3em; text-align: right; }
+
+/* ---------- solda: gecenin kralları (ilk 5, profil fotoğraflı) ---------- */
+#king { top: 26.5%; left: 3%; width: 33%; font-size: .9em; font-family: var(--mono); background: rgba(0,0,0,.55); border: 1px solid #2c2c33; border-top: 2px solid var(--acc); padding: .45em .55em; }
+#king:empty { display: none; }
+#king .kh { font-size: .62em; font-weight: 800; letter-spacing: .14em; color: var(--acc); margin-bottom: .3em; }
+#king .kr { display: flex; align-items: center; gap: .45em; font-size: .7em; padding: .12em 0; }
+#king .kr .n { width: 1em; color: var(--muted); font-weight: 700; text-align: center; }
+#king .kr:first-of-type .n { color: var(--acc); }
+#king:not(.open) .kh, #king:not(.open) .kr:not(:first-of-type) { display: none; }
+#king .kr b { flex: 1; color: #f0f0f4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+#king .kr small { color: var(--acc); font-weight: 800; }
+.av { width: 1.7em; height: 1.7em; border-radius: 50%; object-fit: cover; flex: none; background: #2c2c33; display: grid; place-items: center; font-size: .9em; font-weight: 800; color: #000; border: 1px solid #444; }
+.av.ph { background: var(--acc); }
+
+/* ---------- sağda: büyük hediye listesi (gerçek hediye resimleri) ---------- */
+/* sağ alt: TikTok yorum alanının (alt ~%35) hemen üstü; sahne ışıklarıyla karışmasın diye koyu düz zemin */
+#guide { right: 2.5%; bottom: 35.8%; width: 38%; font-family: var(--sans); background: rgba(6,6,8,.72); border: 1px solid #2c2c33; border-top: 2px solid var(--acc); border-radius: .6em; padding: .35em .45em .45em; }
+.gp { font-family: var(--mono); font-size: .56em; letter-spacing: .14em; color: var(--acc); font-weight: 800; display: flex; justify-content: space-between; margin: 0 .1em .15em; }
+.gp .pd { color: var(--muted); letter-spacing: .05em; }
+.g { display: flex; align-items: center; gap: .55em; padding: .15em .1em; border-radius: .4em; animation: gin .35s; }
+@keyframes gin { from { opacity: 0; transform: translateX(8%); } }
+.g .ic { font-size: 2.3em; width: 1.3em; height: 1.3em; display: grid; place-items: center; flex: none; }
+.g .ic img { width: 1.3em; height: 1.3em; object-fit: contain; }
+.g span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.g b { font-weight: 800; color: #fff; font-size: 1em; line-height: 1.1; text-shadow: 0 1px 2px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g small { color: var(--acc); font-weight: 700; font-size: .7em; font-family: var(--mono); }
+.g.hit { animation: hit .8s; border-color: var(--acc); }
+@keyframes hit { 30% { transform: scale(1.06); background: color-mix(in srgb, var(--acc) 35%, #000); } }
+
+/* ---------- mini oyun kartı (ortada) ---------- */
+#vote { left: 3%; right: 43%; top: 41%; background: rgba(0,0,0,.66); border: 1px solid #34343c; border-top: 2px solid var(--acc); padding: .7em .9em .6em; font-family: var(--mono); animation: fin .3s; }
+#vote .vh { display: flex; justify-content: space-between; font-size: .7em; font-weight: 800; letter-spacing: .14em; color: #fff; }
+#vote .vh span { color: var(--acc); font-variant-numeric: tabular-nums; }
+#vote .vs { margin-top: .25em; font-size: .56em; letter-spacing: .06em; color: var(--muted); }
+#vote .vo { display: grid; grid-template-columns: 1fr auto; gap: .2em .6em; align-items: center; margin-top: .45em; font-size: .62em; }
+#vote .vo .lb { color: #e4e4ea; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; padding: .15em .35em; }
+#vote .vo .lb i { position: absolute; left: 0; top: 0; bottom: 0; background: color-mix(in srgb, var(--acc) 30%, transparent); z-index: -1; transition: width .25s; }
+#vote .vo b { color: var(--acc); font-variant-numeric: tabular-nums; }
+#vote .vg { margin-top: .45em; display: flex; flex-wrap: wrap; gap: .3em; font-size: .58em; }
+#vote .vg span { border: 1px solid #3a3a42; padding: .05em .4em; color: #d6d6de; }
+#vote .vt { margin-top: .55em; height: 2px; background: #2c2c33; }
+#vote .vt i { display: block; height: 100%; background: var(--acc); }
+@keyframes fin { from { opacity: 0; transform: translateY(20%); } }
+
+/* akış: TikTok kendi yorumlarını gösterdiği için sahnede gizli */
+#feed { display: none; }
+
+/* ---------- altyazı + çağrı: TikTok yorumlarının (alt ~%35) hemen üstünde ---------- */
+#caption { left: 3%; right: 43%; bottom: 40.5%; text-align: center; font-size: 1.25em; line-height: 1.3; font-weight: 500; color: #e9e9ee; text-shadow: 0 2px 6px #000, 0 0 2px #000; opacity: 0; transform: translateY(15%); transition: opacity .35s, transform .35s; }
+#caption.on { opacity: 1; transform: none; }
+#caption b { font-weight: 800; color: #fff; }
+#caption em { font-style: normal; font-weight: 800; color: var(--acc); }
+#cta { left: 3%; bottom: 36%; white-space: nowrap; background: rgba(0,0,0,.6); border: 1px solid #3a3a42; border-radius: 99em; padding: .4em 1em; font-size: .85em; font-weight: 600; color: #fff; }
+#cta b { color: var(--acc); font-weight: 800; }
+
+#dropText { inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 7em; font-weight: 800; letter-spacing: .06em; color: #fff; text-shadow: 0 0 .25em var(--acc); opacity: 0; }
+#dropText.on { animation: drop 1.6s ease-out; }
+@keyframes drop { 0% { opacity: 0; transform: scale(2.2); } 15% { opacity: 1; transform: scale(1); } 70% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+
+/* panelde: telefonda TikTok'un kapattığı alanlar */
+#safeZones { inset: 0; z-index: 5; }
+#safeZones .sz { position: absolute; left: 0; right: 0; background: repeating-linear-gradient(45deg, rgba(255,40,80,.28) 0 10px, rgba(255,40,80,.12) 10px 20px); color: #fff; font: 700 .7em var(--mono); display: grid; place-items: center; }
+#safeZones .top { top: 0; height: 17%; }
+#safeZones .bottom { bottom: 0; height: 35%; }
+
+#soundGate { left: 50%; bottom: 48%; transform: translateX(-50%); pointer-events: auto; cursor: pointer; background: #fff; color: #000; font-family: var(--mono); font-weight: 800; letter-spacing: .08em; padding: .6em 1.2em; font-size: .8em; }
+#soundGate.hide { display: none; }
+#muteMark { position: absolute; left: 2%; top: 31%; font-size: .7em; opacity: .35; pointer-events: auto; cursor: pointer; }
+#panel { width: 380px; max-width: 40vw; height: 100vh; overflow: auto; background: var(--panel); padding: 16px; border-left: 1px solid #2a2438; }
+#panel h2 { margin: 0 0 6px; font-size: 18px; }
+#panel h3 { margin: 18px 0 8px; font-size: 14px; color: var(--cyan); }
+#panel .muted { color: var(--muted); font-size: 12px; }
+#panel a { color: var(--cyan); }
+#panel .row { display: flex; gap: 6px; }
+#panel input[type=text], #panel input:not([type]) { flex: 1; min-width: 0; background: #0a0810; color: var(--text); border: 1px solid #3a3350; border-radius: 8px; padding: 8px; }
+#panel button { background: #2a2140; color: var(--text); border: 1px solid #4a3d70; border-radius: 8px; padding: 8px 10px; cursor: pointer; font-size: 13px; }
+#panel button:hover { background: #3a2d5a; }
+#panel button.ghost { background: transparent; }
+#panel .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+#panel label { display: block; font-size: 13px; margin: 6px 0; }
+.status { margin-top: 8px; font-size: 12px; padding: 8px; border-radius: 8px; background: #0a0810; }
+.status.live { color: var(--green); } .status.error { color: #ff6b7d; } .status.waiting, .status.connecting { color: #ffe14d; }
+#panel select { background: #0a0810; color: var(--text); border: 1px solid #3a3350; border-radius: 6px; padding: 4px; margin-left: 6px; }
+.warn { margin-top: 6px; color: #ffe14d; font-size: 12px; }
+#panel details summary { cursor: pointer; font-size: 14px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; }
+#panel button:disabled { opacity: .35; cursor: not-allowed; }
+.check { list-style: none; padding: 0; margin: 0; font-size: 12px; }
+.check li { padding: 4px 0; border-bottom: 1px solid #221d30; }
+.check li.ok::before { content: "✅ "; } .check li.no::before { content: "⚠️ "; }
+#giftLog { list-style: none; padding: 0; margin: 6px 0; font-size: 12px; max-height: 220px; overflow: auto; }
+#giftLog li { padding: 4px 0; border-bottom: 1px solid #221d30; }
+@media (max-width: 800px) { #panel { display: none; } }
